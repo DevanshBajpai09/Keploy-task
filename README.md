@@ -39,8 +39,8 @@ This is a full-stack notification service built with a modern web development st
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/DevanshBajpai09/Keploy-task2.git
-cd Keploy-tas-2
+git clone https://github.com/DevanshBajpai09/Keploy-task.git
+cd Keploy-task
 
 
 ### 2. Install Dependencies
