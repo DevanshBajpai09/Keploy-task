@@ -1,3 +1,95 @@
+# 📬 Notification Service API - Testing Task
+
+This repository contains a custom **Notification Service API** that supports **Email**, **SMS**, and **In-App notifications**, built using **Next.js App Router** and **Prisma**, along with comprehensive **unit, integration, and API tests** using **Jest** and **Supertest**.
+
+---
+
+## Screen Shot
+![Notification Service Testing Report](/app/test.png)
+
+
+
+
+
+## 📌 Features
+
+- ➕ Create new notifications
+- 📦 Store notifications in the database using Prisma ORM
+- 🧪 100% unit test coverage for utility functions
+- 🔗 Integration testing with a live database
+- ✅ API testing using Supertest
+- 🚀 Fully tested using Jest with VM modules
+
+---
+
+## 🧰 Tech Stack
+
+| Layer         | Tech                              |
+|---------------|-----------------------------------|
+| Frontend      | Next.js (App Router)              |
+| Backend       | API Routes in Next.js             |
+| ORM           | Prisma                            |
+| Database      | PostgreSQL / MySQL (choose one)   |
+| Testing       | Jest + Supertest                  |
+
+---
+
+## 🧪 Testing Strategy
+
+### ✅ Unit Tests (`__test__/unit`)
+Test utility functions like `cn()` and `getTypeVariant()` for correctness.
+
+### 🔗 Integration Tests (`__test__/integration`)
+Tests Prisma and DB interaction directly by:
+- Inserting test data
+- Cleaning up after each test
+
+### 🌐 API Tests (`__test__/api`)
+Simulates real HTTP requests to:
+- POST `/api/notifications`
+- Validates response code and body
+
+---
+
+## 📦 Installation & Running
+
+```bash
+# Clone the repo
+git clone https://github.com/yourusername/keploy-task-2.git
+cd keploy-task-2/app
+
+# Install dependencies
+npm install
+
+# Setup Prisma (optional: modify DATABASE_URL in .env)
+npx prisma generate
+npx prisma migrate dev --name init
+
+# Run the development server
+npm run dev
+```
+
+## Project Structure
+
+app/
+├── __test__/
+│   ├── unit/
+│   │   └── utils.test.js
+│   ├── integration/
+│   │   └── notification.integration.test.js
+│   └── api/
+│       └── notifications.api.test.js
+├── lib/
+│   └── utils.js
+├── api/
+│   └── notifications/
+│       └── route.js
+
+
+
+
+
+
 # Full-Stack Notification Service
 
 This is a full-stack notification service built with a modern web development stack. The project allows users to receive different types of notifications (In-app, Email, SMS) and provides APIs to send, view, update, and delete notifications. The backend uses **PostgreSQL**, **NeonDB**, **RabbitMQ**, and **Twilio**, while the frontend is built using **Next.js**, **TailwindCSS**, **Shadcn UI**, and **React Icons**.
