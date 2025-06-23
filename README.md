@@ -5,7 +5,7 @@ This repository contains a custom **Notification Service API** that supports **E
 ---
 
 ## Screen Shot
-![Notification Service Testing Report](/app/test.png)
+![Notification Service Testing Report](./test.png)
 
 
 
