@@ -24,7 +24,12 @@ jobs:
 
       - name: Download and install Keploy CLI
         run: |
-          curl -L https://github.com/keploy/keploy/releases/latest/download/keploy-linux-amd64 -o keploy
+          curl -s https://api.github.com/repos/keploy/keploy/releases/latest \
+            | grep "browser_download_url" \
+            | grep "linux-amd64" \
+            | cut -d '"' -f 4 \
+            | wget -i - -O keploy
+
           chmod +x keploy
           sudo mv keploy /usr/local/bin/keploy
           keploy version
