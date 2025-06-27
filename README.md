@@ -64,8 +64,9 @@ jobs:
 
       - name: Start Keploy and Record
         run: keploy record -c "npm run start" --delay 10
+```
     
-[ci/cd reporrt](./test5.png)
+![ci/cd report](./test5.png)
 
 # 🌐 Task 2: API Testing with Keploy Chrome Extension
 
