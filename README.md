@@ -1,3 +1,147 @@
+# 🚀 Keploy Fellowship  Assignment - API Testing with AI
+
+This repository contains my submission for **Task 1** and **Task 2** of the Keploy Internship Program. It showcases how I used **Keploy** to achieve full API test coverage using AI and integrated it into a **CI/CD pipeline**. I also explored the **Keploy Chrome Extension** for API testing and shared my experience via a blog post.
+
+---
+
+## ✅ Task 1: API Testing with Keploy AI + CI/CD Integration
+
+### 📌 Steps Implemented:
+
+- ✅ Created an OpenAPI schema for the project
+- ✅ Generated test cases using Keploy CLI
+- ✅ Integrated API Testing into GitHub Actions
+- ✅ Ensured pipeline runs successfully after Keploy test generation
+- ✅ Uploaded Keploy test reports and screenshots
+
+### 🛠️ Tech Stack
+
+- `Next.js App Router`
+- `Prisma ORM`
+- `Keploy`
+- `Jest & Supertest`
+- `GitHub Actions`
+
+### 📷 Screenshot of Keploy Test Reports  
+_Add your actual screenshot image in the repo and link it below_
+
+![Keploy Test Report](./test2.png)
+
+---
+
+## 🔁 CI/CD Integration
+
+GitHub Actions workflow automatically runs `keploy record` and validates API tests on every push.
+
+📁 **GitHub Workflow File**: `.github/workflows/keploy.yml`
+
+```yaml
+name: keploy-tests
+on:
+  push:
+    branches: [main]
+
+jobs:
+  run-keploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Download Keploy Binary
+        run: |
+          curl -sL https://github.com/keploy/keploy/releases/latest/download/keploy-linux-amd64 -o keploy
+          chmod +x keploy
+          sudo mv keploy /usr/local/bin/keploy
+
+      - name: Start Keploy and Record
+        run: keploy record -c "npm run start" --delay 10
+    
+[ci/cd reporrt](./test5.png)
+
+# 🌐 Task 2: API Testing with Keploy Chrome Extension
+
+As part of the Keploy Internship, this task focused on testing APIs from live websites using the **Keploy Chrome Extension** and documenting the experience.
+
+---
+
+## ✅ What Was Done
+
+- ✅ Used the **Keploy Chrome Extension** to capture API calls in real-time.
+- ✅ Tested APIs on two popular real-world websites:
+  1. **[Insert Website Name #1]** – Tested dynamic data loading via API
+  2. **[Insert Website Name #2]** – Captured login/data POST APIs
+- ✅ Observed automatic generation of curl commands and test files without writing a single test manually.
+- ✅ Captured and reviewed test cases on the Keploy dashboard.
+
+---
+
+## 🧪 Why It Was Awesome
+
+- 🧠 **AI-Powered Testing**: No need to write test cases manually
+- ⚡ **Zero Setup**: Just open browser, capture, test
+- 💬 **Live Feedback**: Instantly saw what APIs were fired and how they were tested
+- 📂 **Exportable**: Test cases are downloadable and reusable
+
+---
+
+## 📝 Blog Post
+
+I documented my experience in this Medium blog post:
+
+📖 **[How I Went from Zero to Full API Test Coverage Using Keploy in Minutes](https://medium.com/@devanshbajpai07/how-i-went-from-zero-to-full-api-test-coverage-using-keploy-in-minutes-caf697cd4419)**
+
+> In this article, I explain the difference between traditional/manual API testing and Keploy’s AI-assisted testing. I also walk through the Chrome Extension, sharing how it helped me achieve 100% test coverage in minutes.
+
+---
+
+## 📸 Screenshots
+
+| Capturing API with Keploy Extension | Auto-generated curl command |
+|-------------------------------------|-----------------------------|
+| ![Capture API](./test3.png) | ![Curl Test](./test4.png) |
+
+> Make sure to place these screenshots in the `assets/` folder of your repo.
+
+---
+
+## 🔗 Useful Links
+
+- 🧩 [Keploy Chrome Extension](https://chrome.google.com/webstore/detail/keploy-api-testing-ai/...)
+- 🌍 [Keploy Official Site](https://keploy.io/)
+- 📖 [Keploy Docs](https://docs.keploy.io/)
+- ✍️ [My Blog on Medium](https://medium.com/@devanshbajpai07/how-i-went-from-zero-to-full-api-test-coverage-using-keploy-in-minutes-caf697cd4419)
+
+---
+
+## 👨‍💻 Author Info
+
+- **Name**: Devansh Bajpai
+- 📧 Email: devanshbajpai07@gmail.com
+- 💼 [LinkedIn](https://linkedin.com/in/devanshbajpai)
+- ✍️ [Medium Blog](https://medium.com/@devanshbajpai07/how-i-went-from-zero-to-full-api-test-coverage-using-keploy-in-minutes-caf697cd4419)
+
+---
+
+## ✅ Final Notes
+
+- 🎯 This task showcases the simplicity of AI-powered API testing using a browser.
+- 🚀 Reduced hours of test-writing effort to a few minutes.
+- 📖 Documented the whole journey and shared insights for other developers and testers.
+
+---
+
+> ⭐ Star this repo if you find it helpful, and try Keploy to automate your API testing today!
+
+
 # 📬 Notification Service API - Testing Task
 
 This repository contains a custom **Notification Service API** that supports **Email**, **SMS**, and **In-App notifications**, built using **Next.js App Router** and **Prisma**, along with comprehensive **unit, integration, and API tests** using **Jest** and **Supertest**.
