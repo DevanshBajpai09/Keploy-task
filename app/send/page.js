@@ -33,22 +33,24 @@ export default function NotificationView() {
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState('');
   const [markingRead, setMarkingRead] = useState(false);
-
   const [editOpen, setEditOpen] = useState(false);
   const [editingNotification, setEditingNotification] = useState(null);
   const [updatedMessage, setUpdatedMessage] = useState('');
 
   const fetchNotifications = async () => {
-    if (!userId.trim()) return;
+    const trimmedId = userId.trim();
+    if (!trimmedId) return;
+
     setLoading(true);
     try {
-      const response = await fetch(`/api/user/${userId}/notifications`);
-      if (!response.ok) throw new Error('Failed to fetch notifications');
-      const data = await response.json();
-      setNotifications(data.notifications || []);
+      const response = await fetch(`/api/user/${trimmedId}/notifications`);
+      const result = await response.json();
+
+      if (!response.ok) throw new Error(result.error || 'Failed to fetch');
+
+      setNotifications(result.notifications || []);
     } catch (error) {
-      console.error(error);
-      alert('Failed to load notifications');
+      alert(error.message || 'Failed to load notifications');
     } finally {
       setLoading(false);
     }
@@ -57,7 +59,7 @@ export default function NotificationView() {
   const markAsRead = async (notificationId) => {
     setMarkingRead(true);
     try {
-      const response = await fetch(`/api/user/${userId}/notifications`, {
+      const response = await fetch(`/api/user/${userId.trim()}/notifications`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ notificationId }),
@@ -71,7 +73,6 @@ export default function NotificationView() {
         )
       );
     } catch (error) {
-      console.error(error);
       alert(error.message);
     } finally {
       setMarkingRead(false);
@@ -79,23 +80,21 @@ export default function NotificationView() {
   };
 
   const markAllAsRead = async () => {
-    if (!userId.trim()) return;
+    const trimmedId = userId.trim();
+    if (!trimmedId) return;
 
     setMarkingRead(true);
     try {
-      const response = await fetch(`/api/user/${userId}/notifications`, {
+      const response = await fetch(`/api/user/${trimmedId}/notifications`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ notificationId: null }),
+        body: JSON.stringify({}),
       });
 
       if (!response.ok) throw new Error('Failed to mark all as read');
 
-      setNotifications((prev) =>
-        prev.map((n) => ({ ...n, read: true }))
-      );
+      setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
     } catch (error) {
-      console.error(error);
       alert(error.message);
     } finally {
       setMarkingRead(false);
@@ -109,13 +108,16 @@ export default function NotificationView() {
   };
 
   const updateNotification = async () => {
+    const trimmedMessage = updatedMessage.trim();
+    if (!trimmedMessage) return alert('Message cannot be empty.');
+
     try {
-      const response = await fetch(`/api/user/${userId}/update`, {
+      const response = await fetch(`/api/user/${userId.trim()}/update`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           notificationId: editingNotification.id,
-          newMessage: updatedMessage,
+          newMessage: trimmedMessage,
         }),
       });
 
@@ -124,19 +126,19 @@ export default function NotificationView() {
       setNotifications((prev) =>
         prev.map((n) =>
           n.id === editingNotification.id
-            ? { ...n, message: updatedMessage }
+            ? { ...n, message: trimmedMessage }
             : n
         )
       );
       setEditOpen(false);
     } catch (err) {
-      alert('Update failed');
+      alert(err.message || 'Update failed');
     }
   };
 
   const deleteNotification = async (notificationId) => {
     try {
-      const response = await fetch(`/api/user/${userId}/delete`, {
+      const response = await fetch(`/api/user/${userId.trim()}/delete`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ notificationId }),
@@ -148,33 +150,26 @@ export default function NotificationView() {
         prev.filter((n) => n.id !== notificationId)
       );
     } catch (err) {
-      alert('Delete failed');
+      alert(err.message || 'Delete failed');
     }
   };
 
   const getTypeVariant = (type) => {
-    switch (type) {
-      case 'email':
-        return 'secondary';
-      case 'sms':
-        return 'outline';
-      default:
-        return 'default';
-    }
+    return type === 'email'
+      ? 'secondary'
+      : type === 'sms'
+      ? 'outline'
+      : 'default';
   };
 
-  const getReadVariant = (read) => {
-    return read ? 'default' : 'secondary';
-  };
+  const getReadVariant = (read) => (read ? 'default' : 'secondary');
 
   return (
     <main className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-md overflow-hidden p-6">
+      <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-md p-6">
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold text-gray-800">Your Notifications</h1>
-          <p className="mt-2 text-gray-600">
-            View, mark, edit, or delete your notifications
-          </p>
+          <p className="mt-2 text-gray-600">View, mark, edit, or delete your notifications</p>
         </div>
 
         <div className="mb-6 flex items-center gap-2">
@@ -184,10 +179,7 @@ export default function NotificationView() {
             onChange={(e) => setUserId(e.target.value)}
             className="flex-1"
           />
-          <Button
-            onClick={fetchNotifications}
-            disabled={!userId.trim() || loading}
-          >
+          <Button onClick={fetchNotifications} disabled={!userId.trim() || loading}>
             {loading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -200,7 +192,7 @@ export default function NotificationView() {
         </div>
 
         <div className="rounded-md border">
-          {loading && userId ? (
+          {loading ? (
             <div className="flex items-center justify-center h-64">
               <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
             </div>
@@ -226,10 +218,7 @@ export default function NotificationView() {
               </TableHeader>
               <TableBody>
                 {notifications.map((n) => (
-                  <TableRow
-                    key={n.id}
-                    className={n.read ? 'bg-gray-50' : ''}
-                  >
+                  <TableRow key={n.id} className={n.read ? 'bg-gray-50' : ''}>
                     <TableCell>{n.userId}</TableCell>
                     <TableCell className="max-w-xs truncate hover:whitespace-normal">
                       {n.message}
@@ -246,9 +235,7 @@ export default function NotificationView() {
                         </TooltipContent>
                       </Tooltip>
                     </TableCell>
-                    <TableCell>
-                      {new Date(n.createdAt).toLocaleString()}
-                    </TableCell>
+                    <TableCell>{new Date(n.createdAt).toLocaleString()}</TableCell>
                     <TableCell className="flex gap-2 flex-wrap">
                       <Button
                         size="sm"
@@ -264,18 +251,10 @@ export default function NotificationView() {
                           'Mark Read'
                         )}
                       </Button>
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => deleteNotification(n.id)}
-                      >
+                      <Button size="sm" variant="destructive" onClick={() => deleteNotification(n.id)}>
                         Delete
                       </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => openEditDialog(n)}
-                      >
+                      <Button size="sm" variant="outline" onClick={() => openEditDialog(n)}>
                         Edit
                       </Button>
                     </TableCell>
@@ -288,11 +267,7 @@ export default function NotificationView() {
 
         {notifications.length > 0 && (
           <div className="mt-4 text-right">
-            <Button
-              onClick={markAllAsRead}
-              disabled={markingRead}
-              variant="outline"
-            >
+            <Button onClick={markAllAsRead} disabled={markingRead} variant="outline">
               {markingRead ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
